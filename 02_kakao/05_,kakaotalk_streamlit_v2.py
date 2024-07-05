@@ -150,7 +150,7 @@ if uploaded_file is not None:
                 if line.startswith("[대화 개수]"):
                     st.metric(label="대화 개수", value=line.split(":")[1].strip())
                 elif line.startswith("[대화 요약]"):
-                    st.subheader("대화 요약")
+                    # st.subheader("대화 요약")
                     st.text_area(
                         "나눈 대화를 전체적으로 요약합니다.",
                         value=line.split(":")[1].strip(),
@@ -168,7 +168,7 @@ if uploaded_file is not None:
                         st.markdown(trait)
 
                 elif line.startswith("[예상 MBTI]"):
-                    st.subheader("예상 MBTI")
+                    # st.subheader("예상 MBTI")
                     st.text_area(
                         "대화를 통해서 파악한 MBTI입니다.",
                         value=line.split(":")[1].strip(),
