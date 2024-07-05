@@ -1,4 +1,4 @@
-# streamlit share 배포용 
+# streamlit share 배포용
 # Last Updated : 2024-07-05 17:00
 
 import streamlit as st
@@ -13,6 +13,7 @@ from wordcloud import WordCloud
 import pandas as pd
 from collections import Counter
 from io import BytesIO
+from langchain_core.documents import Document
 
 # Sidebar 추가
 st.sidebar.title("네트워크 인사이트 정보")
@@ -54,7 +55,10 @@ def extract_documents_by_nickname(docs, nickname):
     for doc in docs:
         doc_nickname = doc.metadata.get("nickName", "")
         if nickname_pattern.search(doc_nickname):
-            context.append({"page_content": doc.page_content, "metadata": doc.metadata})
+            # context.append({"page_content": doc.page_content, "metadata": doc.metadata})
+            context.append(
+                Document(page_content=doc.page_content, metadata=doc.metadata)
+            )
 
     return context
 
@@ -73,7 +77,7 @@ def generate_wordcloud(text):
 
 # 대화 타임라인 데이터 생성 함수
 def generate_timeline_data(context):
-    date_counter = Counter([item["metadata"]["createDate"] for item in context])
+    date_counter = Counter([item.metadata["createDate"] for item in context])
     dates = list(date_counter.keys())
     counts = list(date_counter.values())
     return pd.DataFrame({"날짜": dates, "메시지 수": counts})
@@ -81,7 +85,7 @@ def generate_timeline_data(context):
 
 # 검색한 문서 결과를 하나의 문단으로 합친다.
 def format_docs(docs):
-    return "\n\n".join(doc["page_content"] for doc in docs)
+    return "\n\n".join(doc.page_content for doc in docs)
 
 
 # 메인 앱 부분
@@ -189,7 +193,7 @@ if uploaded_file is not None:
 
             # 워드 클라우드 생성
             st.subheader("주요 키워드")
-            all_text = " ".join([item["page_content"] for item in context])
+            all_text = " ".join([item.page_content for item in context])
             try:
                 fig = generate_wordcloud(all_text)
                 st.pyplot(fig)
