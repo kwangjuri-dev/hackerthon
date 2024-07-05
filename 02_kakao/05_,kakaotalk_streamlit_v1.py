@@ -142,119 +142,126 @@ if uploaded_file is not None:
     # 닉네임 입력
     nickname = st.text_input("분석할 닉네임을 입력하세요:")
 
-    if nickname:
-        # 해당 nickname의 대화 내용 추출
-        context = extract_documents_by_nickname(docs, nickname)
+    # 분석 버튼 추가
+    if st.button("분석하기"):
+        if nickname:
+            # 해당 nickname의 대화 내용 추출
+            context = extract_documents_by_nickname(docs, nickname)
 
-        if context:
-            message_count = len(context)
-            st.write(f"'{nickname}'을 포함하는 닉네임의 메시지 수: {message_count}")
+            if context:
+                message_count = len(context)
+                st.write(f"'{nickname}'을 포함하는 닉네임의 메시지 수: {message_count}")
 
-            # LLM 설정
-            template = """다음의 <context>를 활용하여 {nickname}의 대화를 요약 정리해 주세요.
-            총 메시지 수는 {message_count}개입니다. 이 수치를 기준으로 분석해 주세요.
+                # LLM 설정
+                template = """다음의 <context>를 활용하여 {nickname}의 대화를 요약 정리해 주세요.
+                총 메시지 수는 {message_count}개입니다. 이 수치를 기준으로 분석해 주세요.
 
-            <context>
-            {context}
-            </context>
+                <context>
+                {context}
+                </context>
 
-            그리고, 대화를 분석하여 성향을 3개의 블릿 리스트 스타일로 정리해 주세요.
-            Answer 형식:
-            [대화 개수] : {message_count}
-            [대화 요약] : 전체적인 대화 요약을 100자 정도로 정리.
-            [성격 분석] :
-            • (첫 번째 성격 특성)
-            • (두 번째 성격 특성)
-            • (세 번째 성격 특성)
+                그리고, 대화를 분석하여 성향을 3개의 블릿 리스트 스타일로 정리해 주세요.
+                Answer 형식:
+                [대화 개수] : {message_count}
+                [대화 요약] : 전체적인 대화 요약을 200자 정도로 정리.
+                [성격 분석] :
+                • (첫 번째 성격 특성) 50자 정도로 정리
+                • (두 번째 성격 특성) 50자 정도로 정리
+                • (세 번째 성격 특성) 50자 정도로 정리
+                [MBTI 분석] : 예상 MBTI와 50자 정도의 해설
 
-            """
-            prompt = ChatPromptTemplate.from_template(template)
+                """
+                prompt = ChatPromptTemplate.from_template(template)
 
-            llm = ChatOpenAI(model_name=model_name, temperature=0)
+                llm = ChatOpenAI(model_name=model_name, temperature=0)
 
-            chain = prompt | llm | StrOutputParser()
+                chain = prompt | llm | StrOutputParser()
 
-            format_context = format_docs(context)[:5000]
+                format_context = format_docs(context)[:5000]
 
-            with st.spinner("분석 중..."):
-                result = chain.invoke(
-                    {
-                        "context": format_context,
-                        "nickname": nickname,
-                        "message_count": message_count,
-                    }
+                with st.spinner("분석 중..."):
+                    result = chain.invoke(
+                        {
+                            "context": format_context,
+                            "nickname": nickname,
+                            "message_count": message_count,
+                        }
+                    )
+
+                st.subheader("분석 결과")
+
+                # 결과를 줄 단위로 분리
+                lines = result.split("\n")
+
+                # 각 섹션별로 처리
+                for line in lines:
+                    if line.startswith("[대화 개수]"):
+                        st.metric(label="대화 개수", value=line.split(":")[1].strip())
+                    elif line.startswith("[대화 요약]"):
+                        st.text_area(
+                            "대화 요약",
+                            value=line.split(":")[1].strip(),
+                            height=100,
+                            disabled=False,
+                        )
+                    elif line.startswith("[성격 분석]"):
+                        st.subheader("성격 분석")
+                        traits = [
+                            trait.strip()
+                            for trait in lines[lines.index(line) + 1 :]
+                            if trait.strip().startswith("•")
+                        ]
+                        for trait in traits:
+                            st.markdown(trait)
+                    elif line.startswith("[MBTI 분석]"):
+                        st.text_area(
+                            "MBTI 분석",
+                            value=line.split(":")[1].strip(),
+                            height=50,
+                            disabled=False,
+                        )
+
+                # 워드 클라우드 생성
+                st.subheader("주요 키워드")
+                all_text = " ".join([item.page_content for item in context])
+                try:
+                    fig = generate_wordcloud(all_text)
+                    wordcloud_path = f"{nickname}_wordcloud.png"
+                    plt.savefig(wordcloud_path)
+                    st.pyplot(fig)
+                    plt.close(fig)
+                except Exception as e:
+                    st.error(f"워드 클라우드 생성 중 오류 발생: {str(e)}")
+                    st.write("대신 주요 키워드를 텍스트로 표시합니다.")
+                    words = all_text.split()
+                    word_freq = Counter(words).most_common(20)
+                    st.write(
+                        ", ".join([f"{word} ({count})" for word, count in word_freq])
+                    )
+                    wordcloud_path = None
+
+                # 대화 타임라인 시각화
+                st.subheader("대화 타임라인")
+                timeline_data = generate_timeline_data(context)
+                st.line_chart(timeline_data.set_index("날짜"))
+
+                # Markdown 생성
+                markdown_result = generate_markdown(nickname, result, wordcloud_path)
+
+                # Markdown 파일 다운로드 버튼
+                st.markdown("## 분석 결과 다운로드")
+                markdown_file = markdown_result.encode()
+                st.markdown(
+                    get_binary_file_downloader_html(
+                        markdown_file, f"{nickname}_분석결과.md"
+                    ),
+                    unsafe_allow_html=True,
                 )
 
-            st.subheader("분석 결과")
-
-            # 결과를 줄 단위로 분리
-            lines = result.split("\n")
-
-            # 각 섹션별로 처리
-            for line in lines:
-                if line.startswith("[대화 개수]"):
-                    st.metric(label="대화 개수", value=line.split(":")[1].strip())
-                elif line.startswith("[대화 요약]"):
-                    st.text_area(
-                        "대화 요약",
-                        value=line.split(":")[1].strip(),
-                        height=100,
-                        disabled=False,
-                    )
-                elif line.startswith("[성격 분석]"):
-                    st.subheader("성격 분석")
-                    traits = [
-                        trait.strip()
-                        for trait in lines[lines.index(line) + 1 :]
-                        if trait.strip().startswith("•")
-                    ]
-                    for trait in traits:
-                        st.markdown(trait)
-                # elif line.startswith("[예상 MBTI]"):
-                #     st.text_area(
-                #         "예상 MBTI",
-                #         value=line.split(":")[1].strip(),
-                #         height=50,
-                #         disabled=False,
-                #     )
-
-            # 워드 클라우드 생성
-            st.subheader("주요 키워드")
-            all_text = " ".join([item.page_content for item in context])
-            try:
-                fig = generate_wordcloud(all_text)
-                wordcloud_path = f"{nickname}_wordcloud.png"
-                plt.savefig(wordcloud_path)
-                st.pyplot(fig)
-                plt.close(fig)
-            except Exception as e:
-                st.error(f"워드 클라우드 생성 중 오류 발생: {str(e)}")
-                st.write("대신 주요 키워드를 텍스트로 표시합니다.")
-                words = all_text.split()
-                word_freq = Counter(words).most_common(20)
-                st.write(", ".join([f"{word} ({count})" for word, count in word_freq]))
-                wordcloud_path = None
-
-            # 대화 타임라인 시각화
-            st.subheader("대화 타임라인")
-            timeline_data = generate_timeline_data(context)
-            st.line_chart(timeline_data.set_index("날짜"))
-
-            # Markdown 생성
-            markdown_result = generate_markdown(nickname, result, wordcloud_path)
-
-            # Markdown 파일 다운로드 버튼
-            st.markdown("## 분석 결과 다운로드")
-            markdown_file = markdown_result.encode()
-            st.markdown(
-                get_binary_file_downloader_html(
-                    markdown_file, f"{nickname}_분석결과.md"
-                ),
-                unsafe_allow_html=True,
-            )
-
+            else:
+                st.write(f"'{nickname}'을 포함하는 닉네임의 메시지를 찾을 수 없습니다.")
         else:
-            st.write(f"'{nickname}'을 포함하는 닉네임의 메시지를 찾을 수 없습니다.")
+            st.warning("닉네임을 입력해주세요.")
 
     # 임시 파일 삭제
     os.remove("temp_chat.txt")
