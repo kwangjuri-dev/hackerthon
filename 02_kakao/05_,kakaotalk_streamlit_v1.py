@@ -10,6 +10,35 @@ from wordcloud import WordCloud
 import pandas as pd
 from collections import Counter
 from io import BytesIO
+from langchain_core.documents import Document
+
+# Sidebar 추가
+st.sidebar.title("네트워크 인사이트 정보")
+st.sidebar.markdown(
+    """
+이 애플리케이션은 카카오톡 대화를 분석하여 다음과 같은 정보를 제공합니다:
+- 대화 요약
+- 성격 분석
+- 주요 키워드 워드클라우드
+- 대화 타임라인
+
+사용 방법:
+1. 카카오톡 대화 내보내기 기능을 사용하여 txt 파일을 생성합니다.
+2. 생성된 txt 파일을 업로드합니다.
+3. 분석하고자 하는 닉네임을 입력합니다.
+4. 분석 결과를 확인합니다.
+
+※ 주의 : gpt-4o 모델이 사용됩니다!!
+"""
+)
+
+# OpenAI API Key 입력
+api_key = st.sidebar.text_input("OpenAI API Key를 입력하세요", type="password")
+if api_key:
+    os.environ["OPENAI_API_KEY"] = api_key
+    st.sidebar.success("API Key가 설정되었습니다!")
+else:
+    st.sidebar.warning("API Key를 입력해주세요.")
 
 # model
 model_name = "gpt-4o"  # 실제 사용 가능한 모델명으로 변경
@@ -23,18 +52,19 @@ def extract_documents_by_nickname(docs, nickname):
     for doc in docs:
         doc_nickname = doc.metadata.get("nickName", "")
         if nickname_pattern.search(doc_nickname):
-            context.append({"page_content": doc.page_content, "metadata": doc.metadata})
+            # context.append({"page_content": doc.page_content, "metadata": doc.metadata})
+            context.append(
+                Document(page_content=doc.page_content, metadata=doc.metadata)
+            )
 
     return context
 
 
 # 워드 클라우드 생성 함수
 def generate_wordcloud(text):
+    font_path = "GmarketSansTTFLight.ttf"
     wordcloud = WordCloud(
-        width=800,
-        height=400,
-        background_color="white",
-        font_path="GmarketSansTTFLight.ttf",
+        width=800, height=400, background_color="white", font_path=font_path
     ).generate(text)
     fig, ax = plt.subplots(figsize=(10, 5))
     ax.imshow(wordcloud, interpolation="bilinear")
@@ -44,17 +74,25 @@ def generate_wordcloud(text):
 
 # 대화 타임라인 데이터 생성 함수
 def generate_timeline_data(context):
-    date_counter = Counter([item["metadata"]["createDate"] for item in context])
+    date_counter = Counter([item.metadata["createDate"] for item in context])
     dates = list(date_counter.keys())
     counts = list(date_counter.values())
     return pd.DataFrame({"날짜": dates, "메시지 수": counts})
+
 
 # 검색한 문서 결과를 하나의 문단으로 합친다.
 def format_docs(docs):
     return "\n\n".join(doc.page_content for doc in docs)
 
-# Streamlit 앱 시작
-st.title("카카오톡 대화 분석기")
+
+# 메인 앱 부분
+st.title("네트워크 인사이트")
+st.write("카카오톡 대화를 통한 스마트 인맥 분석기")
+
+# API Key 체크
+if not api_key:
+    st.warning("사이드바에서 OpenAI API Key를 입력해주세요.")
+    st.stop()
 
 # 파일 업로드
 uploaded_file = st.file_uploader("카카오톡 대화 txt 파일을 업로드하세요", type="txt")
@@ -95,6 +133,7 @@ if uploaded_file is not None:
             • (첫 번째 성격 특성)
             • (두 번째 성격 특성)
             • (세 번째 성격 특성)
+            [예상 MBTI] : 대화 내용으로 추정되는 MBIT와 해설을 50자 정도로 정리
             """
             prompt = ChatPromptTemplate.from_template(template)
 
@@ -102,12 +141,12 @@ if uploaded_file is not None:
 
             chain = prompt | llm | StrOutputParser()
 
-            context_sum = format_docs(context)
+            format_context = format_docs(context)
 
             with st.spinner("분석 중..."):
                 result = chain.invoke(
                     {
-                        "context": context_sum,
+                        "context": format_context,
                         "nickname": nickname,
                         "message_count": message_count,
                     }
@@ -123,11 +162,12 @@ if uploaded_file is not None:
                 if line.startswith("[대화 개수]"):
                     st.metric(label="대화 개수", value=line.split(":")[1].strip())
                 elif line.startswith("[대화 요약]"):
+                    # st.subheader("대화 요약")
                     st.text_area(
                         "대화 요약",
                         value=line.split(":")[1].strip(),
                         height=100,
-                        disabled=True,
+                        disabled=False,
                     )
                 elif line.startswith("[성격 분석]"):
                     st.subheader("성격 분석")
@@ -139,9 +179,18 @@ if uploaded_file is not None:
                     for trait in traits:
                         st.markdown(trait)
 
+                elif line.startswith("[예상 MBTI]"):
+                    # st.subheader("예상 MBTI")
+                    st.text_area(
+                        "예상 MBTI",
+                        value=line.split(":")[1].strip(),
+                        height=50,
+                        disabled=False,
+                    )
+
             # 워드 클라우드 생성
             st.subheader("주요 키워드")
-            all_text = " ".join([item["content"] for item in context])
+            all_text = " ".join([item.page_content for item in context])
             try:
                 fig = generate_wordcloud(all_text)
                 st.pyplot(fig)
