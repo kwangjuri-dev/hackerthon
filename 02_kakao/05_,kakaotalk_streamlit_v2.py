@@ -75,6 +75,9 @@ def generate_timeline_data(context):
     counts = list(date_counter.values())
     return pd.DataFrame({"날짜": dates, "메시지 수": counts})
 
+# 검색한 문서 결과를 하나의 문단으로 합친다.
+def format_docs(docs):
+    return "\n\n".join(doc.page_content for doc in docs)
 
 # 메인 앱 부분
 st.title("네트워크 인사이트")
@@ -130,12 +133,14 @@ if uploaded_file is not None:
 
             llm = ChatOpenAI(model_name=model_name, temperature=0)
 
+            context_sum = format_docs(context)
+            
             chain = prompt | llm | StrOutputParser()
 
             with st.spinner("분석 중..."):
                 result = chain.invoke(
                     {
-                        "context": context,
+                        "context": context_sum,
                         "nickname": nickname,
                         "message_count": message_count,
                     }
