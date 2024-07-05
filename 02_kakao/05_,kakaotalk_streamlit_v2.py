@@ -136,7 +136,7 @@ if uploaded_file is not None:
             • (첫 번째 성격 특성)
             • (두 번째 성격 특성)
             • (세 번째 성격 특성)
-            [예상 MBTI] : 대화 내용으로 추정되는 MBIT와 해설을 50자 정도로 정리
+            [예상 MBTI] : 대화 내용으로 추정되는 MBTI와 해설을 50자 정도로 정리
             """
             prompt = ChatPromptTemplate.from_template(template)
 
