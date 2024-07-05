@@ -1,6 +1,3 @@
-# streamlit share 배포용
-# Last Updated : 2024-07-05 17:00
-
 import streamlit as st
 from kakaotalk_loader import KakaotalkLoader
 from langchain_core.prompts import ChatPromptTemplate
@@ -14,6 +11,8 @@ import pandas as pd
 from collections import Counter
 from io import BytesIO
 from langchain_core.documents import Document
+import base64
+from datetime import datetime
 
 # Sidebar 추가
 st.sidebar.title("네트워크 인사이트 정보")
@@ -30,8 +29,9 @@ st.sidebar.markdown(
 2. 생성된 txt 파일을 업로드합니다.
 3. 분석하고자 하는 닉네임을 입력합니다.
 4. 분석 결과를 확인합니다.
+5. 분석 결과를 Obsidian 형식의 Markdown으로 다운로드 받습니다.
 
-※ 주의 : gpt-4o 모델이 사용됩니다!!
+※ 주의 : gpt-4 모델이 사용됩니다!!
 """
 )
 
@@ -55,7 +55,6 @@ def extract_documents_by_nickname(docs, nickname):
     for doc in docs:
         doc_nickname = doc.metadata.get("nickName", "")
         if nickname_pattern.search(doc_nickname):
-            # context.append({"page_content": doc.page_content, "metadata": doc.metadata})
             context.append(
                 Document(page_content=doc.page_content, metadata=doc.metadata)
             )
@@ -88,6 +87,37 @@ def format_docs(docs):
     return "\n\n".join(doc.page_content for doc in docs)
 
 
+# Markdown 생성 함수
+def generate_markdown(nickname, analysis_result, wordcloud_path):
+    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    markdown = f"""---
+time_created: {current_time}
+tags:
+  - Networking
+  - KakaoTalk
+  - {nickname}
+MOC: [[Networking]]
+---
+
+# {nickname} 분석 결과
+
+{analysis_result}
+
+## 주요 키워드
+![워드클라우드]({wordcloud_path})
+
+"""
+    return markdown
+
+
+# 파일 다운로드 링크 생성 함수
+def get_binary_file_downloader_html(bin_file, file_label="File"):
+    bin_str = base64.b64encode(bin_file).decode()
+    href = f'<a href="data:application/octet-stream;base64,{bin_str}" download="{file_label}">다운로드 {file_label}</a>'
+    return href
+
+
 # 메인 앱 부분
 st.title("네트워크 인사이트")
 st.write("카카오톡 대화를 통한 스마트 인맥 분석기")
@@ -112,106 +142,128 @@ if uploaded_file is not None:
     # 닉네임 입력
     nickname = st.text_input("분석할 닉네임을 입력하세요:")
 
-    if nickname:
-        # 해당 nickname의 대화 내용 추출
-        context = extract_documents_by_nickname(docs, nickname)
+    # 분석 버튼 추가
+    if st.button("분석하기"):
+        if nickname:
+            # 해당 nickname의 대화 내용 추출
+            context = extract_documents_by_nickname(docs, nickname)
 
-        if context:
-            message_count = len(context)
-            st.write(f"'{nickname}'을 포함하는 닉네임의 메시지 수: {message_count}")
+            if context:
+                message_count = len(context)
+                st.write(f"'{nickname}'을 포함하는 닉네임의 메시지 수: {message_count}")
 
-            # LLM 설정
-            template = """다음의 <context>를 활용하여 {nickname}의 대화를 요약 정리해 주세요.
-            총 메시지 수는 {message_count}개입니다. 이 수치를 기준으로 분석해 주세요.
+                # LLM 설정
+                template = """다음의 <context>를 활용하여 {nickname}의 대화를 요약 정리해 주세요.
+                총 메시지 수는 {message_count}개입니다. 이 수치를 기준으로 분석해 주세요.
 
-            <context>
-            {context}
-            </context>
+                <context>
+                {context}
+                </context>
 
-            그리고, 대화를 분석하여 성향을 3개의 블릿 리스트 스타일로 정리해 주세요.
-            Answer 형식:
-            [대화 개수] : {message_count}
-            [대화 요약] : 전체적인 대화 요약을 100자 정도로 정리.
-            [성격 분석] :
-            • (첫 번째 성격 특성)
-            • (두 번째 성격 특성)
-            • (세 번째 성격 특성)
+                그리고, 대화를 분석하여 성향을 3개의 블릿 리스트 스타일로 정리해 주세요.
+                Answer 형식:
+                [대화 개수] : {message_count}
+                [대화 요약] : 전체적인 대화 요약을 200자 정도로 정리.
+                [성격 분석] :
+                • (첫 번째 성격 특성) 50자 정도로 정리
+                • (두 번째 성격 특성) 50자 정도로 정리
+                • (세 번째 성격 특성) 50자 정도로 정리
+                [MBTI 분석] : 예상 MBTI와 50자 정도의 해설
 
-            """
-            prompt = ChatPromptTemplate.from_template(template)
+                """
+                prompt = ChatPromptTemplate.from_template(template)
 
-            llm = ChatOpenAI(model_name=model_name, temperature=0)
+                llm = ChatOpenAI(model_name=model_name, temperature=0)
 
-            chain = prompt | llm | StrOutputParser()
+                chain = prompt | llm | StrOutputParser()
 
-            format_context = format_docs(context)[:5000]
+                format_context = format_docs(context)[:5000]
 
-            with st.spinner("분석 중..."):
-                result = chain.invoke(
-                    {
-                        "context": format_context,
-                        "nickname": nickname,
-                        "message_count": message_count,
-                    }
+                with st.spinner("분석 중..."):
+                    result = chain.invoke(
+                        {
+                            "context": format_context,
+                            "nickname": nickname,
+                            "message_count": message_count,
+                        }
+                    )
+
+                st.subheader("분석 결과")
+
+                # 결과를 줄 단위로 분리
+                lines = result.split("\n")
+
+                # 각 섹션별로 처리
+                for line in lines:
+                    if line.startswith("[대화 개수]"):
+                        st.metric(label="대화 개수", value=line.split(":")[1].strip())
+                    elif line.startswith("[대화 요약]"):
+                        st.text_area(
+                            "대화 요약",
+                            value=line.split(":")[1].strip(),
+                            height=100,
+                            disabled=False,
+                        )
+                    elif line.startswith("[성격 분석]"):
+                        st.subheader("성격 분석")
+                        traits = [
+                            trait.strip()
+                            for trait in lines[lines.index(line) + 1 :]
+                            if trait.strip().startswith("•")
+                        ]
+                        for trait in traits:
+                            st.markdown(trait)
+                    elif line.startswith("[MBTI 분석]"):
+                        st.text_area(
+                            "MBTI 분석",
+                            value=line.split(":")[1].strip(),
+                            height=50,
+                            disabled=False,
+                        )
+
+                # 워드 클라우드 생성
+                st.subheader("주요 키워드")
+                all_text = " ".join([item.page_content for item in context])
+                try:
+                    fig = generate_wordcloud(all_text)
+                    wordcloud_path = f"{nickname}_wordcloud.png"
+                    plt.savefig(wordcloud_path)
+                    st.pyplot(fig)
+                    plt.close(fig)
+                except Exception as e:
+                    st.error(f"워드 클라우드 생성 중 오류 발생: {str(e)}")
+                    st.write("대신 주요 키워드를 텍스트로 표시합니다.")
+                    words = all_text.split()
+                    word_freq = Counter(words).most_common(20)
+                    st.write(
+                        ", ".join([f"{word} ({count})" for word, count in word_freq])
+                    )
+                    wordcloud_path = None
+
+                # 대화 타임라인 시각화
+                st.subheader("대화 타임라인")
+                timeline_data = generate_timeline_data(context)
+                st.line_chart(timeline_data.set_index("날짜"))
+
+                # Markdown 생성
+                markdown_result = generate_markdown(nickname, result, wordcloud_path)
+
+                # Markdown 파일 다운로드 버튼
+                st.markdown("## 분석 결과 다운로드")
+                markdown_file = markdown_result.encode()
+                st.markdown(
+                    get_binary_file_downloader_html(
+                        markdown_file, f"{nickname}_분석결과.md"
+                    ),
+                    unsafe_allow_html=True,
                 )
 
-            st.subheader("분석 결과")
-
-            # 결과를 줄 단위로 분리
-            lines = result.split("\n")
-
-            # 각 섹션별로 처리
-            for line in lines:
-                if line.startswith("[대화 개수]"):
-                    st.metric(label="대화 개수", value=line.split(":")[1].strip())
-                elif line.startswith("[대화 요약]"):
-                    # st.subheader("대화 요약")
-                    st.text_area(
-                        "대화 요약",
-                        value=line.split(":")[1].strip(),
-                        height=100,
-                        disabled=False,
-                    )
-                elif line.startswith("[성격 분석]"):
-                    st.subheader("성격 분석")
-                    traits = [
-                        trait.strip()
-                        for trait in lines[lines.index(line) + 1 :]
-                        if trait.strip().startswith("•")
-                    ]
-                    for trait in traits:
-                        st.markdown(trait)
-
-                # elif line.startswith("[예상 MBTI]"):
-                #     # st.subheader("예상 MBTI")
-                #     st.text_area(
-                #         "예상 MBTI",
-                #         value=line.split(":")[1].strip(),
-                #         height=50,
-                #         disabled=False,
-                #     )
-
-            # 워드 클라우드 생성
-            st.subheader("주요 키워드")
-            all_text = " ".join([item.page_content for item in context])
-            try:
-                fig = generate_wordcloud(all_text)
-                st.pyplot(fig)
-                plt.close(fig)
-            except Exception as e:
-                st.error(f"워드 클라우드 생성 중 오류 발생: {str(e)}")
-                st.write("대신 주요 키워드를 텍스트로 표시합니다.")
-                words = all_text.split()
-                word_freq = Counter(words).most_common(20)
-                st.write(", ".join([f"{word} ({count})" for word, count in word_freq]))
-
-            # 대화 타임라인 시각화
-            st.subheader("대화 타임라인")
-            timeline_data = generate_timeline_data(context)
-            st.line_chart(timeline_data.set_index("날짜"))
-
+            else:
+                st.write(f"'{nickname}'을 포함하는 닉네임의 메시지를 찾을 수 없습니다.")
         else:
-            st.write(f"'{nickname}'을 포함하는 닉네임의 메시지를 찾을 수 없습니다.")
+            st.warning("닉네임을 입력해주세요.")
 
     # 임시 파일 삭제
     os.remove("temp_chat.txt")
+    if os.path.exists(f"{nickname}_wordcloud.png"):
+        os.remove(f"{nickname}_wordcloud.png")
