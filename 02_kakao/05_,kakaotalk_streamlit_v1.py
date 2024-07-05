@@ -44,7 +44,8 @@ else:
     st.sidebar.warning("API Key를 입력해주세요.")
 
 # model
-model_name = "gpt-4"  # 실제 사용 가능한 모델명으로 변경
+model_name = "gpt-4o"  # 실제 사용 가능한 모델명으로 변경
+
 
 # 문서 추출 함수
 def extract_documents_by_nickname(docs, nickname):
@@ -60,6 +61,7 @@ def extract_documents_by_nickname(docs, nickname):
 
     return context
 
+
 # 워드 클라우드 생성 함수
 def generate_wordcloud(text):
     font_path = "GmarketSansTTFLight.ttf"
@@ -71,6 +73,7 @@ def generate_wordcloud(text):
     ax.axis("off")
     return fig
 
+
 # 대화 타임라인 데이터 생성 함수
 def generate_timeline_data(context):
     date_counter = Counter([item.metadata["createDate"] for item in context])
@@ -78,14 +81,16 @@ def generate_timeline_data(context):
     counts = list(date_counter.values())
     return pd.DataFrame({"날짜": dates, "메시지 수": counts})
 
+
 # 검색한 문서 결과를 하나의 문단으로 합친다.
 def format_docs(docs):
     return "\n\n".join(doc.page_content for doc in docs)
 
+
 # Markdown 생성 함수
 def generate_markdown(nickname, analysis_result, wordcloud_path):
     current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    
+
     markdown = f"""---
 time_created: {current_time}
 tags:
@@ -105,11 +110,13 @@ MOC: [[Networking]]
 """
     return markdown
 
+
 # 파일 다운로드 링크 생성 함수
-def get_binary_file_downloader_html(bin_file, file_label='File'):
+def get_binary_file_downloader_html(bin_file, file_label="File"):
     bin_str = base64.b64encode(bin_file).decode()
     href = f'<a href="data:application/octet-stream;base64,{bin_str}" download="{file_label}">다운로드 {file_label}</a>'
     return href
+
 
 # 메인 앱 부분
 st.title("네트워크 인사이트")
@@ -159,7 +166,7 @@ if uploaded_file is not None:
             • (첫 번째 성격 특성)
             • (두 번째 성격 특성)
             • (세 번째 성격 특성)
-            [예상 MBTI] : 대화 내용으로 추정되는 MBIT와 해설을 50자 정도로 정리
+
             """
             prompt = ChatPromptTemplate.from_template(template)
 
@@ -167,7 +174,7 @@ if uploaded_file is not None:
 
             chain = prompt | llm | StrOutputParser()
 
-            format_context = format_docs(context)
+            format_context = format_docs(context)[:5000]
 
             with st.spinner("분석 중..."):
                 result = chain.invoke(
@@ -203,13 +210,13 @@ if uploaded_file is not None:
                     ]
                     for trait in traits:
                         st.markdown(trait)
-                elif line.startswith("[예상 MBTI]"):
-                    st.text_area(
-                        "예상 MBTI",
-                        value=line.split(":")[1].strip(),
-                        height=50,
-                        disabled=False,
-                    )
+                # elif line.startswith("[예상 MBTI]"):
+                #     st.text_area(
+                #         "예상 MBTI",
+                #         value=line.split(":")[1].strip(),
+                #         height=50,
+                #         disabled=False,
+                #     )
 
             # 워드 클라우드 생성
             st.subheader("주요 키워드")
@@ -240,8 +247,10 @@ if uploaded_file is not None:
             st.markdown("## 분석 결과 다운로드")
             markdown_file = markdown_result.encode()
             st.markdown(
-                get_binary_file_downloader_html(markdown_file, f'{nickname}_분석결과.md'),
-                unsafe_allow_html=True
+                get_binary_file_downloader_html(
+                    markdown_file, f"{nickname}_분석결과.md"
+                ),
+                unsafe_allow_html=True,
             )
 
         else:
