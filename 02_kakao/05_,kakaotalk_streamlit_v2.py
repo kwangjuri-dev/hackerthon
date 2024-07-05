@@ -13,6 +13,7 @@ from io import BytesIO
 from langchain_core.documents import Document
 import base64
 from datetime import datetime
+import json
 
 # Sidebar 추가
 st.sidebar.title("네트워크 인사이트 정보")
@@ -118,6 +119,23 @@ def get_binary_file_downloader_html(bin_file, file_label="File"):
     return href
 
 
+def score_to_stars(score):
+    if score >= 0.7:
+        return "⭐⭐⭐⭐⭐"
+    elif score >= 0.5:
+        return "⭐⭐⭐⭐"
+    elif score >= 0.3:
+        return "⭐⭐⭐"
+    elif score >= 0.2:
+        return "⭐⭐"
+    else:
+        return "⭐"
+
+
+# JSON 파일 로드
+with open("similarity_nickName_top5.json", "r", encoding="utf-8") as f:
+    similarity_data = json.load(f)
+
 # 메인 앱 부분
 st.title("네트워크 인사이트")
 st.write("카카오톡 대화를 통한 스마트 인맥 분석기")
@@ -163,7 +181,7 @@ if uploaded_file is not None:
                 그리고, 대화를 분석하여 성향을 3개의 블릿 리스트 스타일로 정리해 주세요.
                 Answer 형식:
                 [대화 개수] : {message_count}
-                [대화 요약] : 전체적인 대화 요약을 150자 정도로 정리.
+                [대화 요약] : 전체적인 대화 요약을 200자 정도로 정리.
                 [성격 분석] :
                 • (첫 번째 성격 특성) 50자 정도로 정리
                 • (두 번째 성격 특성) 50자 정도로 정리
@@ -220,6 +238,46 @@ if uploaded_file is not None:
                             height=50,
                             disabled=False,
                         )
+
+                # 유사도 데이터 표시
+                st.subheader("네트워크 유사성 스펙트럼")
+                if nickname in similarity_data:
+                    similar_nicknames = similarity_data[nickname]
+                    df = pd.DataFrame(similar_nicknames)
+                    df.columns = ["닉네임", "네트워크 근접도"]
+                    df["유사성 지수"] = df["네트워크 근접도"].apply(score_to_stars)
+
+                    # 테이블 스타일 적용
+                    st.markdown(
+                        """
+                    <style>
+                        .dataframe {
+                            font-size: 16px;
+                            width: 100%;
+                        }
+                        .dataframe th {
+                            text-align: left;
+                            font-weight: bold;
+                            padding: 10px;
+                        }
+                        .dataframe td {
+                            text-align: left;
+                            padding: 10px;
+                        }
+                        .dataframe tr:nth-child(even) {
+                            background-color: #f5f5f5;
+                        }
+                    </style>
+                    """,
+                        unsafe_allow_html=True,
+                    )
+
+                    # 테이블 표시 (네트워크 근접도 열 제외)
+                    st.table(df[["닉네임", "유사성 지수"]])
+                else:
+                    st.write(
+                        f"'{nickname}'에 대한 네트워크 유사성 데이터를 찾을 수 없습니다."
+                    )
 
                 # 워드 클라우드 생성
                 st.subheader("주요 키워드")
