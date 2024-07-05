@@ -152,7 +152,7 @@ if uploaded_file is not None:
                 elif line.startswith("[대화 요약]"):
                     # st.subheader("대화 요약")
                     st.text_area(
-                        "나눈 대화를 전체적으로 요약합니다.",
+                        "대화 요약",
                         value=line.split(":")[1].strip(),
                         height=100,
                         disabled=False,
@@ -170,7 +170,7 @@ if uploaded_file is not None:
                 elif line.startswith("[예상 MBTI]"):
                     # st.subheader("예상 MBTI")
                     st.text_area(
-                        "대화를 통해서 파악한 MBTI입니다.",
+                        "예상 MBTI",
                         value=line.split(":")[1].strip(),
                         height=50,
                         disabled=False,
