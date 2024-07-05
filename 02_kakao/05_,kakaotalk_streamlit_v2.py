@@ -152,6 +152,7 @@ if uploaded_file is not None:
                 elif line.startswith("[대화 요약]"):
                     st.subheader("대화 요약")
                     st.text_area(
+                        "대화 요약",
                         value=line.split(":")[1].strip(),
                         height=100,
                         disabled=False,
