@@ -11,6 +11,8 @@ import pandas as pd
 from collections import Counter
 from io import BytesIO
 from langchain_core.documents import Document
+import base64
+from datetime import datetime
 
 # Sidebar 추가
 st.sidebar.title("네트워크 인사이트 정보")
@@ -27,8 +29,9 @@ st.sidebar.markdown(
 2. 생성된 txt 파일을 업로드합니다.
 3. 분석하고자 하는 닉네임을 입력합니다.
 4. 분석 결과를 확인합니다.
+5. 분석 결과를 Obsidian 형식의 Markdown으로 다운로드 받습니다.
 
-※ 주의 : gpt-4o 모델이 사용됩니다!!
+※ 주의 : gpt-4 모델이 사용됩니다!!
 """
 )
 
@@ -41,8 +44,7 @@ else:
     st.sidebar.warning("API Key를 입력해주세요.")
 
 # model
-model_name = "gpt-4o"  # 실제 사용 가능한 모델명으로 변경
-
+model_name = "gpt-4"  # 실제 사용 가능한 모델명으로 변경
 
 # 문서 추출 함수
 def extract_documents_by_nickname(docs, nickname):
@@ -52,13 +54,11 @@ def extract_documents_by_nickname(docs, nickname):
     for doc in docs:
         doc_nickname = doc.metadata.get("nickName", "")
         if nickname_pattern.search(doc_nickname):
-            # context.append({"page_content": doc.page_content, "metadata": doc.metadata})
             context.append(
                 Document(page_content=doc.page_content, metadata=doc.metadata)
             )
 
     return context
-
 
 # 워드 클라우드 생성 함수
 def generate_wordcloud(text):
@@ -71,7 +71,6 @@ def generate_wordcloud(text):
     ax.axis("off")
     return fig
 
-
 # 대화 타임라인 데이터 생성 함수
 def generate_timeline_data(context):
     date_counter = Counter([item.metadata["createDate"] for item in context])
@@ -79,11 +78,38 @@ def generate_timeline_data(context):
     counts = list(date_counter.values())
     return pd.DataFrame({"날짜": dates, "메시지 수": counts})
 
-
 # 검색한 문서 결과를 하나의 문단으로 합친다.
 def format_docs(docs):
     return "\n\n".join(doc.page_content for doc in docs)
 
+# Markdown 생성 함수
+def generate_markdown(nickname, analysis_result, wordcloud_path):
+    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    
+    markdown = f"""---
+time_created: {current_time}
+tags:
+  - Networking
+  - KakaoTalk
+  - {nickname}
+MOC: [[Networking]]
+---
+
+# {nickname} 분석 결과
+
+{analysis_result}
+
+## 주요 키워드
+![워드클라우드]({wordcloud_path})
+
+"""
+    return markdown
+
+# 파일 다운로드 링크 생성 함수
+def get_binary_file_downloader_html(bin_file, file_label='File'):
+    bin_str = base64.b64encode(bin_file).decode()
+    href = f'<a href="data:application/octet-stream;base64,{bin_str}" download="{file_label}">다운로드 {file_label}</a>'
+    return href
 
 # 메인 앱 부분
 st.title("네트워크 인사이트")
@@ -162,7 +188,6 @@ if uploaded_file is not None:
                 if line.startswith("[대화 개수]"):
                     st.metric(label="대화 개수", value=line.split(":")[1].strip())
                 elif line.startswith("[대화 요약]"):
-                    # st.subheader("대화 요약")
                     st.text_area(
                         "대화 요약",
                         value=line.split(":")[1].strip(),
@@ -178,9 +203,7 @@ if uploaded_file is not None:
                     ]
                     for trait in traits:
                         st.markdown(trait)
-
                 elif line.startswith("[예상 MBTI]"):
-                    # st.subheader("예상 MBTI")
                     st.text_area(
                         "예상 MBTI",
                         value=line.split(":")[1].strip(),
@@ -193,6 +216,8 @@ if uploaded_file is not None:
             all_text = " ".join([item.page_content for item in context])
             try:
                 fig = generate_wordcloud(all_text)
+                wordcloud_path = f"{nickname}_wordcloud.png"
+                plt.savefig(wordcloud_path)
                 st.pyplot(fig)
                 plt.close(fig)
             except Exception as e:
@@ -201,14 +226,28 @@ if uploaded_file is not None:
                 words = all_text.split()
                 word_freq = Counter(words).most_common(20)
                 st.write(", ".join([f"{word} ({count})" for word, count in word_freq]))
+                wordcloud_path = None
 
             # 대화 타임라인 시각화
             st.subheader("대화 타임라인")
             timeline_data = generate_timeline_data(context)
             st.line_chart(timeline_data.set_index("날짜"))
 
+            # Markdown 생성
+            markdown_result = generate_markdown(nickname, result, wordcloud_path)
+
+            # Markdown 파일 다운로드 버튼
+            st.markdown("## 분석 결과 다운로드")
+            markdown_file = markdown_result.encode()
+            st.markdown(
+                get_binary_file_downloader_html(markdown_file, f'{nickname}_분석결과.md'),
+                unsafe_allow_html=True
+            )
+
         else:
             st.write(f"'{nickname}'을 포함하는 닉네임의 메시지를 찾을 수 없습니다.")
 
     # 임시 파일 삭제
     os.remove("temp_chat.txt")
+    if os.path.exists(f"{nickname}_wordcloud.png"):
+        os.remove(f"{nickname}_wordcloud.png")
