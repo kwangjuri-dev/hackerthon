@@ -13,7 +13,8 @@ from io import BytesIO
 
 # Sidebar 추가
 st.sidebar.title("카카오톡 대화 분석기 정보")
-st.sidebar.markdown("""
+st.sidebar.markdown(
+    """
 이 애플리케이션은 카카오톡 대화를 분석하여 다음과 같은 정보를 제공합니다:
 - 대화 요약
 - 성격 분석
@@ -25,7 +26,10 @@ st.sidebar.markdown("""
 2. 생성된 txt 파일을 업로드합니다.
 3. 분석하고자 하는 닉네임을 입력합니다.
 4. 분석 결과를 확인합니다.
-""")
+
+※ gpt-4o 모델이 사용됩니다. 과금의 위험성을 감안하세요!!
+"""
+)
 
 # OpenAI API Key 입력
 api_key = st.sidebar.text_input("OpenAI API Key를 입력하세요", type="password")
@@ -38,36 +42,39 @@ else:
 # model
 model_name = "gpt-4o"  # 실제 사용 가능한 모델명으로 변경
 
+
 # 문서 추출 함수
 def extract_documents_by_nickname(docs, nickname):
     context = []
     nickname_pattern = re.compile(re.escape(nickname), re.IGNORECASE)
-    
+
     for doc in docs:
-        doc_nickname = doc.metadata.get('nickName', '')
+        doc_nickname = doc.metadata.get("nickName", "")
         if nickname_pattern.search(doc_nickname):
-            context.append({
-                'content': doc.page_content,
-                'metadata': doc.metadata
-            })
-    
+            context.append({"content": doc.page_content, "metadata": doc.metadata})
+
     return context
+
 
 # 워드 클라우드 생성 함수
 def generate_wordcloud(text):
-    font_path = 'GmarketSansTTFLight.ttf'
-    wordcloud = WordCloud(width=800, height=400, background_color='white', font_path=font_path).generate(text)
+    font_path = "GmarketSansTTFLight.ttf"
+    wordcloud = WordCloud(
+        width=800, height=400, background_color="white", font_path=font_path
+    ).generate(text)
     fig, ax = plt.subplots(figsize=(10, 5))
-    ax.imshow(wordcloud, interpolation='bilinear')
-    ax.axis('off')
+    ax.imshow(wordcloud, interpolation="bilinear")
+    ax.axis("off")
     return fig
+
 
 # 대화 타임라인 데이터 생성 함수
 def generate_timeline_data(context):
-    date_counter = Counter([item['metadata']['createDate'] for item in context])
+    date_counter = Counter([item["metadata"]["createDate"] for item in context])
     dates = list(date_counter.keys())
     counts = list(date_counter.values())
-    return pd.DataFrame({'날짜': dates, '메시지 수': counts})
+    return pd.DataFrame({"날짜": dates, "메시지 수": counts})
+
 
 # 메인 앱 부분
 st.title("카카오톡 대화 분석기")
