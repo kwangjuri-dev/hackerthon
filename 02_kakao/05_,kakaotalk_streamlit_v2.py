@@ -38,44 +38,36 @@ else:
 # model
 model_name = "gpt-4o"  # 실제 사용 가능한 모델명으로 변경
 
-
 # 문서 추출 함수
 def extract_documents_by_nickname(docs, nickname):
     context = []
     nickname_pattern = re.compile(re.escape(nickname), re.IGNORECASE)
-
+    
     for doc in docs:
-        doc_nickname = doc.metadata.get("nickName", "")
+        doc_nickname = doc.metadata.get('nickName', '')
         if nickname_pattern.search(doc_nickname):
-            context.append({"content": doc.page_content, "metadata": doc.metadata})
-
+            context.append({
+                'content': doc.page_content,
+                'metadata': doc.metadata
+            })
+    
     return context
-
 
 # 워드 클라우드 생성 함수
 def generate_wordcloud(text):
-    try:
-        # 방법 1: 시스템 폰트 사용 (폰트 지정 없음)
-        wordcloud = WordCloud(width=800, height=400, background_color="white").generate(text)
-        
-        # 방법 2: 폰트 지정 없이 생성 (위와 동일)
-        # wordcloud = WordCloud(width=800, height=400, background_color="white").generate(text)
-        
-        fig, ax = plt.subplots(figsize=(10, 5))
-        ax.imshow(wordcloud, interpolation="bilinear")
-        ax.axis("off")
-        return fig
-    except Exception as e:
-        st.error(f"워드 클라우드 생성 중 오류 발생: {str(e)}")
-        return None
+    font_path = 'GmarketSansTTFLight.ttf'
+    wordcloud = WordCloud(width=800, height=400, background_color='white', font_path=font_path).generate(text)
+    fig, ax = plt.subplots(figsize=(10, 5))
+    ax.imshow(wordcloud, interpolation='bilinear')
+    ax.axis('off')
+    return fig
 
 # 대화 타임라인 데이터 생성 함수
 def generate_timeline_data(context):
-    date_counter = Counter([item["metadata"]["createDate"] for item in context])
+    date_counter = Counter([item['metadata']['createDate'] for item in context])
     dates = list(date_counter.keys())
     counts = list(date_counter.values())
-    return pd.DataFrame({"날짜": dates, "메시지 수": counts})
-
+    return pd.DataFrame({'날짜': dates, '메시지 수': counts})
 
 # 메인 앱 부분
 st.title("카카오톡 대화 분석기")
@@ -169,22 +161,16 @@ if uploaded_file is not None:
             # 워드 클라우드 생성
             st.subheader("주요 키워드")
             all_text = " ".join([item["content"] for item in context])
-            fig = generate_wordcloud(all_text)
-            if fig:
+            try:
+                fig = generate_wordcloud(all_text)
                 st.pyplot(fig)
                 plt.close(fig)
-            else:
-                st.write("워드 클라우드를 생성할 수 없습니다. 대신 주요 키워드를 텍스트로 표시합니다.")
+            except Exception as e:
+                st.error(f"워드 클라우드 생성 중 오류 발생: {str(e)}")
+                st.write("대신 주요 키워드를 텍스트로 표시합니다.")
                 words = all_text.split()
                 word_freq = Counter(words).most_common(20)
                 st.write(", ".join([f"{word} ({count})" for word, count in word_freq]))
-
-            # 방법 3: 키워드 막대 그래프로 시각화 (선택적)
-            st.subheader("주요 키워드 (막대 그래프)")
-            word_freq_df = pd.DataFrame(word_freq, columns=['단어', '빈도수'])
-            st.bar_chart(word_freq_df.set_index('단어'))
-
-
 
             # 대화 타임라인 시각화
             st.subheader("대화 타임라인")
