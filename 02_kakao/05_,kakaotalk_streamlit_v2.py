@@ -55,7 +55,7 @@ def extract_documents_by_nickname(docs, nickname):
 
 # 워드 클라우드 생성 함수
 def generate_wordcloud(text):
-    font_path = 'GmarketSansTTFLight.ttf'
+    font_path = r'.\02_kakao\GmarketSansTTFLight.ttf'
     wordcloud = WordCloud(width=800, height=400, background_color='white', font_path=font_path).generate(text)
     fig, ax = plt.subplots(figsize=(10, 5))
     ax.imshow(wordcloud, interpolation='bilinear')
