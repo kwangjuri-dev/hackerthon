@@ -12,7 +12,7 @@ from collections import Counter
 from io import BytesIO
 
 # Sidebar 추가
-st.sidebar.title("카카오톡 대화 분석기 정보")
+st.sidebar.title("네트워크 인사이트 정보")
 st.sidebar.markdown(
     """
 이 애플리케이션은 카카오톡 대화를 분석하여 다음과 같은 정보를 제공합니다:
@@ -78,7 +78,7 @@ def generate_timeline_data(context):
 
 # 메인 앱 부분
 st.title("네트워크 인사이트")
-st.subheader("카카오톡 대화를 통한 스마트 인맥 분석기")
+st.write("카카오톡 대화를 통한 스마트 인맥 분석기")
 
 # API Key 체크
 if not api_key:
