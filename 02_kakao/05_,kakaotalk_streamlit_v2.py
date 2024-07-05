@@ -136,7 +136,7 @@ if uploaded_file is not None:
             • (첫 번째 성격 특성)
             • (두 번째 성격 특성)
             • (세 번째 성격 특성)
-            [예상 MBTI] : 대화 내용으로 추정되는 MBTI와 해설을 50자 정도로 정리
+
             """
             prompt = ChatPromptTemplate.from_template(template)
 
@@ -182,14 +182,14 @@ if uploaded_file is not None:
                     for trait in traits:
                         st.markdown(trait)
 
-                elif line.startswith("[예상 MBTI]"):
-                    # st.subheader("예상 MBTI")
-                    st.text_area(
-                        "예상 MBTI",
-                        value=line.split(":")[1].strip(),
-                        height=50,
-                        disabled=False,
-                    )
+                # elif line.startswith("[예상 MBTI]"):
+                #     # st.subheader("예상 MBTI")
+                #     st.text_area(
+                #         "예상 MBTI",
+                #         value=line.split(":")[1].strip(),
+                #         height=50,
+                #         disabled=False,
+                #     )
 
             # 워드 클라우드 생성
             st.subheader("주요 키워드")
