@@ -77,7 +77,8 @@ def generate_timeline_data(context):
 
 
 # 메인 앱 부분
-st.title("카카오톡 대화 분석기")
+st.title("네트워크 인사이트")
+st.subheader("카카오톡 대화를 통한 스마트 인맥 분석기")
 
 # API Key 체크
 if not api_key:
