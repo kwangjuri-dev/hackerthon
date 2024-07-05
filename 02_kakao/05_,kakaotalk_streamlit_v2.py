@@ -144,7 +144,7 @@ if uploaded_file is not None:
 
             chain = prompt | llm | StrOutputParser()
 
-            format_context = format_docs(context)
+            format_context = format_docs(context)[:5000]
 
             with st.spinner("분석 중..."):
                 result = chain.invoke(
