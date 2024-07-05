@@ -23,7 +23,7 @@ def extract_documents_by_nickname(docs, nickname):
     for doc in docs:
         doc_nickname = doc.metadata.get("nickName", "")
         if nickname_pattern.search(doc_nickname):
-            context.append({"content": doc.page_content, "metadata": doc.metadata})
+            context.append({"page_content": doc.page_content, "metadata": doc.metadata})
 
     return context
 
@@ -49,6 +49,9 @@ def generate_timeline_data(context):
     counts = list(date_counter.values())
     return pd.DataFrame({"날짜": dates, "메시지 수": counts})
 
+# 검색한 문서 결과를 하나의 문단으로 합친다.
+def format_docs(docs):
+    return "\n\n".join(doc.page_content for doc in docs)
 
 # Streamlit 앱 시작
 st.title("카카오톡 대화 분석기")
@@ -99,10 +102,12 @@ if uploaded_file is not None:
 
             chain = prompt | llm | StrOutputParser()
 
+            context_sum = format_docs(context)
+
             with st.spinner("분석 중..."):
                 result = chain.invoke(
                     {
-                        "context": context,
+                        "context": context_sum,
                         "nickname": nickname,
                         "message_count": message_count,
                     }
