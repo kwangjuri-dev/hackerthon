@@ -1,3 +1,6 @@
+# streamlit share 배포용 
+# Last Updated : 2024-07-05 17:00
+
 import streamlit as st
 from kakaotalk_loader import KakaotalkLoader
 from langchain_core.prompts import ChatPromptTemplate
