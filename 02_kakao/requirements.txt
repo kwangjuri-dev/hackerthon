@@ -1,5 +1,6 @@
 streamlit
-langchain
+langchain==0.1.9
+langchain-openai==0.0.7
 openai
 matplotlib
 wordcloud
