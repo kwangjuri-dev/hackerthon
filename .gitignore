@@ -5,4 +5,14 @@
 /newjeans.jpg
 /토요모임.csv
 
-*.json
+# *.json
+
+HackerThon_4/*
+HackerThon_4
+
+*.png
+*.jpg
+*.zip
+*.css
+
+01_html
