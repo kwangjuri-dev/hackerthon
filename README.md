@@ -47,13 +47,13 @@
 
 ![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/5a68e3fb-2358-4814-87ba-1455bdc0daaf)
 
-**프로필 디자인 (안) - 3순위**
-
-![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/fb466a7b-eee4-408b-98aa-34658990132d)
-
 **프로필 디자인 (안) - 1순위**
 
 ![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/8a719df4-e92a-44d6-80c2-4a374ea6793e)
+
+**프로필 디자인 (안) - 3순위**
+
+![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/fb466a7b-eee4-408b-98aa-34658990132d)
 
 **디자인 스케치 (1/3)**
 
