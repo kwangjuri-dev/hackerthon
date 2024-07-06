@@ -34,6 +34,39 @@
 
 ![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/887660f4-8f5d-4b5f-9185-8012eb3f1d2a)
 
+![ezgif com-animated-gif-maker_1](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/207cc8c0-638c-4e33-a230-0902d3daccf3)
+
+
+---
+
+### 코사인 유사도 기반 매칭 서비스
+이 서비스는 데이터 준비, 임베딩, 유사도 계산, 결과 저장의 주요 단계로 구성됩니다.
+사용자 간의 유사성을 정확하게 파악하여 최적의 매칭을 제공합니다. 이를 통해 효율적이고 정확한 매칭 결과를 얻을 수 있습니다.
+
+![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/af3d114d-affb-43e4-80c3-806c6d53ef1e)
+
+
+
+### 카카오 단톡방 대화 내용 활용 "네트워크 인사이트"
+
+streamlit 주소 : https://hackerthon-gkkm2vaxgkajjwrjfaasyt.streamlit.app/
+
+![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/f9cb3db1-a46b-46d9-a4d3-96b97e26b223)
+
+
+![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/eeb77495-c816-4814-a303-83bf92f4cfd4)
+
+![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/4615ca19-a39c-4fec-8c6a-f03a1d42b44c)
+
+![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/4d117e2c-d9c1-43cf-8113-17cfcdf1eaab)
+
+
+
+
+---
+
+### 참고 화면
+
 **회원가입 화면에서 발자취 입력**
 
 ![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/5a8deca7-6d86-4dba-9dac-1eac516b9da6)
@@ -69,31 +102,6 @@
 **디자인 스케치 (3/3)**
 
 ![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/c542b4e9-9865-4a66-97c7-1118858e0dd8)
-
-
----
-
-### 코사인 유사도 기반 매칭 서비스
-이 서비스는 데이터 준비, 임베딩, 유사도 계산, 결과 저장의 주요 단계로 구성됩니다.
-사용자 간의 유사성을 정확하게 파악하여 최적의 매칭을 제공합니다. 이를 통해 효율적이고 정확한 매칭 결과를 얻을 수 있습니다.
-
-![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/af3d114d-affb-43e4-80c3-806c6d53ef1e)
-
-
-
-### 카카오 단톡방 대화 내용 활용 "네트워크 인사이트"
-
-streamlit 주소 : https://hackerthon-gkkm2vaxgkajjwrjfaasyt.streamlit.app/
-
-![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/f9cb3db1-a46b-46d9-a4d3-96b97e26b223)
-
-
-![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/eeb77495-c816-4814-a303-83bf92f4cfd4)
-
-![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/4615ca19-a39c-4fec-8c6a-f03a1d42b44c)
-
-![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/4d117e2c-d9c1-43cf-8113-17cfcdf1eaab)
-
 
 
 
