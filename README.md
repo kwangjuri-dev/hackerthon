@@ -35,7 +35,20 @@
 
 
 
-### 카카오 단톡방 대화 내용 활용 
+### 카카오 단톡방 대화 내용 활용 "네트워크 인사이트"
+
+streamlit 주소 : https://hackerthon-gkkm2vaxgkajjwrjfaasyt.streamlit.app/
 
 ![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/f9cb3db1-a46b-46d9-a4d3-96b97e26b223)
+
+
+![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/eeb77495-c816-4814-a303-83bf92f4cfd4)
+
+![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/4615ca19-a39c-4fec-8c6a-f03a1d42b44c)
+
+![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/4d117e2c-d9c1-43cf-8113-17cfcdf1eaab)
+
+
+
+
 
