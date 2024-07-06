@@ -28,6 +28,10 @@
 
 ### User Interface(웹 디자인)
 
+
+![ezgif com-animated-gif-maker](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/5116f4ac-5adf-4d8a-b6f2-4fe6cab45642)
+
+
 ![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/887660f4-8f5d-4b5f-9185-8012eb3f1d2a)
 
 **회원가입 화면에서 발자취 입력**
@@ -66,7 +70,6 @@
 
 ![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/c542b4e9-9865-4a66-97c7-1118858e0dd8)
 
-![ezgif com-animated-gif-maker](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/5116f4ac-5adf-4d8a-b6f2-4fe6cab45642)
 
 ---
 
