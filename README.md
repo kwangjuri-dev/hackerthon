@@ -1,0 +1,112 @@
+# GPTers 해커톤 1기
+
+## 팀명 : 인맥내비 : 인맥 목적지 경로를 안내 드립니다.
+
+### 참가자 
+- Olivia(팀 리더)
+- 클라우드(개발)
+- Spark / 박승화(기획, 개발)
+- 안계준(개발)
+- 이른아침에(개발)
+
+
+## 내용
+
+### 개요
+"디지털 명함을 넘어선 스마트 네트워킹" 플랫폼 개발. QR코드 또는 ID를 통해 쉽게 연결하고, AI가 인맥을 스마트하게 관리해주는 서비스
+
+### 배경
+- 오프라인 이벤트 후 명함 관리의 어려움
+- 필요할 때 적절한 인맥을 찾기 힘든 현실
+- 의미 있는 관계 유지의 어려움
+
+### 🚀 프로젝트 비전
+"넥스트워크"는 단순한 디지털 명함 앱을 넘어, 인맥 관리의 새로운 패러다임을 제시합니다. 우리의 목표는 사용자들이 더 쉽고 효율적으로 가치 있는 관계를 형성하고 유지할 수 있도록 돕는 것입니다.
+
+
+---
+
+### User Interface(웹 디자인)
+
+
+
+https://github.com/kwangjuri-dev/hackerthon/assets/155471168/6536e22b-941a-4d90-b0d3-504d14a8f06d
+
+
+![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/887660f4-8f5d-4b5f-9185-8012eb3f1d2a)
+
+
+![ezgif com-animated-gif-maker](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/5116f4ac-5adf-4d8a-b6f2-4fe6cab45642)
+
+
+
+---
+
+### 코사인 유사도 기반 매칭 서비스
+이 서비스는 데이터 준비, 임베딩, 유사도 계산, 결과 저장의 주요 단계로 구성됩니다.
+사용자 간의 유사성을 정확하게 파악하여 최적의 매칭을 제공합니다. 이를 통해 효율적이고 정확한 매칭 결과를 얻을 수 있습니다.
+
+![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/af3d114d-affb-43e4-80c3-806c6d53ef1e)
+
+
+
+### 카카오 단톡방 대화 내용 활용 "네트워크 인사이트"
+
+#### streamlit 주소 : https://hackerthon-gkkm2vaxgkajjwrjfaasyt.streamlit.app/
+
+#### 오른 쪽 링크를 누르시면 소개자료를 보실 수 있습니다 : [소개자료](https://hairy-fish-22vvwud.gamma.site/)
+
+![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/f9cb3db1-a46b-46d9-a4d3-96b97e26b223)
+
+
+![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/eeb77495-c816-4814-a303-83bf92f4cfd4)
+
+![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/4615ca19-a39c-4fec-8c6a-f03a1d42b44c)
+
+![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/4d117e2c-d9c1-43cf-8113-17cfcdf1eaab)
+
+
+
+
+---
+
+### 참고 화면
+
+**회원가입 화면에서 발자취 입력**
+
+![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/5a8deca7-6d86-4dba-9dac-1eac516b9da6)
+
+**최종 구현 UI (네트워크 아이콘 클릭 전)**
+
+![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/8f774377-47b2-44ad-80d5-1cddcecaaf40)
+
+**최종 구현  UI (아이콘 클릭 후 프로필 팝업)**
+
+![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/80c1dae3-9abd-44d6-b7ce-2ea973329094)
+
+**최종 구현 UI (인맥보기 눌러서 파도타기)**
+
+![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/5a68e3fb-2358-4814-87ba-1455bdc0daaf)
+
+**프로필 디자인 (안) - 1순위**
+
+![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/8a719df4-e92a-44d6-80c2-4a374ea6793e)
+
+**프로필 디자인 (안) - 3순위**
+
+![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/fb466a7b-eee4-408b-98aa-34658990132d)
+
+**디자인 스케치 (1/3)**
+
+![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/de8cdc11-2367-4db7-8b93-c46fb3a3d908)
+
+**디자인 스케치 (2/3)**
+
+![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/4bed15b8-d72a-4594-9554-20da90f7b9dd)
+
+**디자인 스케치 (3/3)**
+
+![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/c542b4e9-9865-4a66-97c7-1118858e0dd8)
+
+
+
