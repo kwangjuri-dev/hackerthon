@@ -1,3 +1,6 @@
+# 사람별 유사도 계산을 직접 수행하는 방식을 적용한 것임. 
+# 그런데, 시간도 오래 걸리고, 로직이 좀 이상함. 
+
 import streamlit as st
 from kakaotalk_loader import KakaotalkLoader
 from langchain_core.prompts import ChatPromptTemplate
