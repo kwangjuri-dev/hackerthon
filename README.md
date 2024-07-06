@@ -26,6 +26,18 @@
 
 ---
 
+![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/1e02dad3-8e3b-45d2-b78a-da25d11e72e2)
+
+
+
+
+
+
+
+
+
+
+
 
 ### 코사인 유사도 기반 매칭 서비스
 이 서비스는 데이터 준비, 임베딩, 유사도 계산, 결과 저장의 주요 단계로 구성됩니다.
