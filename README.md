@@ -33,12 +33,11 @@
 https://github.com/kwangjuri-dev/hackerthon/assets/155471168/6536e22b-941a-4d90-b0d3-504d14a8f06d
 
 
-![ezgif com-animated-gif-maker](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/5116f4ac-5adf-4d8a-b6f2-4fe6cab45642)
-
-
 ![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/887660f4-8f5d-4b5f-9185-8012eb3f1d2a)
 
-![ezgif com-animated-gif-maker_1](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/207cc8c0-638c-4e33-a230-0902d3daccf3)
+
+![ezgif com-animated-gif-maker](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/5116f4ac-5adf-4d8a-b6f2-4fe6cab45642)
+
 
 
 ---
@@ -53,7 +52,9 @@ https://github.com/kwangjuri-dev/hackerthon/assets/155471168/6536e22b-941a-4d90-
 
 ### 카카오 단톡방 대화 내용 활용 "네트워크 인사이트"
 
-streamlit 주소 : https://hackerthon-gkkm2vaxgkajjwrjfaasyt.streamlit.app/
+#### streamlit 주소 : https://hackerthon-gkkm2vaxgkajjwrjfaasyt.streamlit.app/
+
+#### 오른 쪽 링크를 누르시면 소개자료를 보실 수 있습니다 : [소개자료](https://hairy-fish-22vvwud.gamma.site/)
 
 ![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/f9cb3db1-a46b-46d9-a4d3-96b97e26b223)
 
@@ -106,7 +107,6 @@ streamlit 주소 : https://hackerthon-gkkm2vaxgkajjwrjfaasyt.streamlit.app/
 **디자인 스케치 (3/3)**
 
 ![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/c542b4e9-9865-4a66-97c7-1118858e0dd8)
-
 
 
 
