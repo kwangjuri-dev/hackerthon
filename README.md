@@ -33,3 +33,9 @@
 
 ![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/af3d114d-affb-43e4-80c3-806c6d53ef1e)
 
+
+
+### 카카오 단톡방 대화 내용 활용 
+
+![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/f9cb3db1-a46b-46d9-a4d3-96b97e26b223)
+
