@@ -1,3 +1,6 @@
+# 사람 간의 유사도 방식이 사전에 계산된 파일을 사용하는 것임.
+# streamlit share에 배포가 된 파일 버전임. 
+
 import streamlit as st
 from kakaotalk_loader import KakaotalkLoader
 from langchain_core.prompts import ChatPromptTemplate
@@ -32,7 +35,7 @@ st.sidebar.markdown(
 4. 분석 결과를 확인합니다.
 5. 분석 결과를 Obsidian 형식의 Markdown으로 다운로드 받습니다.
 
-※ 주의 : gpt-4 모델이 사용됩니다!!
+※ 주의 : gpt-4o 모델이 사용됩니다!!
 """
 )
 
