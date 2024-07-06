@@ -242,9 +242,6 @@ if uploaded_file is not None:
                 # 유사도 데이터 표시
                 st.subheader("네트워크 유사성 스펙트럼")
 
-                # 디버깅: similarity_data의 키 출력
-                st.write("데이터베이스의 닉네임들:", list(similarity_data.keys()))
-
                 # 정규표현식 패턴 생성
                 nickname_pattern = re.compile(re.escape(nickname), re.IGNORECASE)
 
@@ -255,17 +252,15 @@ if uploaded_file is not None:
                     if nickname_pattern.search(nick)
                 ]
 
-                # 디버깅: 매칭된 닉네임 출력
-                st.write("매칭된 닉네임들:", matching_nicknames)
-
                 if matching_nicknames:
+                    st.write(
+                        f"'{nickname}'과 유사한 {len(matching_nicknames)}개의 닉네임을 찾았습니다."
+                    )
+
                     all_similar_nicknames = []
                     for matched_nick in matching_nicknames:
                         similar_nicknames = similarity_data[matched_nick]
                         all_similar_nicknames.extend(similar_nicknames)
-
-                    # 디버깅: 유사한 닉네임들 출력
-                    st.write("유사한 닉네임들:", all_similar_nicknames)
 
                     df = pd.DataFrame(all_similar_nicknames)
                     df.columns = ["닉네임", "네트워크 근접도"]
@@ -273,10 +268,6 @@ if uploaded_file is not None:
                     df = df.sort_values(
                         "네트워크 근접도", ascending=False
                     ).drop_duplicates("닉네임")
-
-                    # 디버깅: 최종 데이터프레임 출력
-                    st.write("최종 데이터프레임:")
-                    st.write(df)
 
                     # 테이블 스타일 적용
                     st.markdown(
@@ -305,8 +296,10 @@ if uploaded_file is not None:
 
                     # 테이블 표시 (네트워크 근접도 열 제외)
                     st.table(df[["닉네임", "유사성 지수"]])
+
+                    st.info(f"총 {len(df)}개의 유사한 닉네임을 표시하고 있습니다.")
                 else:
-                    st.write(
+                    st.warning(
                         f"'{nickname}'과 유사한 닉네임에 대한 네트워크 유사성 데이터를 찾을 수 없습니다."
                     )
 
