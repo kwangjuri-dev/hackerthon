@@ -241,11 +241,42 @@ if uploaded_file is not None:
 
                 # 유사도 데이터 표시
                 st.subheader("네트워크 유사성 스펙트럼")
-                if nickname in similarity_data:
-                    similar_nicknames = similarity_data[nickname]
-                    df = pd.DataFrame(similar_nicknames)
+
+                # 디버깅: similarity_data의 키 출력
+                st.write("데이터베이스의 닉네임들:", list(similarity_data.keys()))
+
+                # 정규표현식 패턴 생성
+                nickname_pattern = re.compile(re.escape(nickname), re.IGNORECASE)
+
+                # 매칭되는 모든 닉네임 찾기
+                matching_nicknames = [
+                    nick
+                    for nick in similarity_data.keys()
+                    if nickname_pattern.search(nick)
+                ]
+
+                # 디버깅: 매칭된 닉네임 출력
+                st.write("매칭된 닉네임들:", matching_nicknames)
+
+                if matching_nicknames:
+                    all_similar_nicknames = []
+                    for matched_nick in matching_nicknames:
+                        similar_nicknames = similarity_data[matched_nick]
+                        all_similar_nicknames.extend(similar_nicknames)
+
+                    # 디버깅: 유사한 닉네임들 출력
+                    st.write("유사한 닉네임들:", all_similar_nicknames)
+
+                    df = pd.DataFrame(all_similar_nicknames)
                     df.columns = ["닉네임", "네트워크 근접도"]
                     df["유사성 지수"] = df["네트워크 근접도"].apply(score_to_stars)
+                    df = df.sort_values(
+                        "네트워크 근접도", ascending=False
+                    ).drop_duplicates("닉네임")
+
+                    # 디버깅: 최종 데이터프레임 출력
+                    st.write("최종 데이터프레임:")
+                    st.write(df)
 
                     # 테이블 스타일 적용
                     st.markdown(
@@ -276,7 +307,7 @@ if uploaded_file is not None:
                     st.table(df[["닉네임", "유사성 지수"]])
                 else:
                     st.write(
-                        f"'{nickname}'에 대한 네트워크 유사성 데이터를 찾을 수 없습니다."
+                        f"'{nickname}'과 유사한 닉네임에 대한 네트워크 유사성 데이터를 찾을 수 없습니다."
                     )
 
                 # 워드 클라우드 생성
