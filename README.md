@@ -26,28 +26,40 @@
 
 ---
 
-![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/1e02dad3-8e3b-45d2-b78a-da25d11e72e2)
+### User Interface(웹 디자인)
+
+![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/887660f4-8f5d-4b5f-9185-8012eb3f1d2a)
 
 
+**회원가입 화면에서 발자취 입력**
+![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/5a8deca7-6d86-4dba-9dac-1eac516b9da6)
+
+**최종 구현 ;UI (네트워크 아이콘 클릭 전)**
 ![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/8f774377-47b2-44ad-80d5-1cddcecaaf40)
 
+**최 구현  UI (아이콘 클릭 후 프로필 팝업)**
 ![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/80c1dae3-9abd-44d6-b7ce-2ea973329094)
 
+**최종 구현 UI (인맥보기 눌러서 파도타기)**
 ![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/5a68e3fb-2358-4814-87ba-1455bdc0daaf)
 
+**프로필 디자인 (안) - 3순위**
 ![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/fb466a7b-eee4-408b-98aa-34658990132d)
 
+**프로필 디자인 (안) - 1순위**
 ![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/8a719df4-e92a-44d6-80c2-4a374ea6793e)
 
+**디자인 스케치 (1/3)**
 ![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/de8cdc11-2367-4db7-8b93-c46fb3a3d908)
 
+**디자인 스케치 (2/3)**
 ![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/4bed15b8-d72a-4594-9554-20da90f7b9dd)
 
+**디자인 스케치 (3/3)**
 ![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/c542b4e9-9865-4a66-97c7-1118858e0dd8)
 
 
-
-
+---
 
 ### 코사인 유사도 기반 매칭 서비스
 이 서비스는 데이터 준비, 임베딩, 유사도 계산, 결과 저장의 주요 단계로 구성됩니다.
