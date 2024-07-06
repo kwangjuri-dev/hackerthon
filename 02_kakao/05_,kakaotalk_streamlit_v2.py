@@ -89,7 +89,7 @@ def format_docs(docs):
 
 
 # Markdown 생성 함수
-def generate_markdown(nickname, analysis_result, wordcloud_path):
+def generate_markdown(nickname, analysis_result, matching_nicknames):
     current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     markdown = f"""---
@@ -105,8 +105,8 @@ MOC: [[Networking]]
 
 {analysis_result}
 
-## 주요 키워드
-![워드클라우드]({wordcloud_path})
+## 네트워크 유사성 스펙트럼
+{matching_nicknames}
 
 """
     return markdown
@@ -120,9 +120,9 @@ def get_binary_file_downloader_html(bin_file, file_label="File"):
 
 
 def score_to_stars(score):
-    if score >= 0.7:
+    if score >= 0.5:
         return "⭐⭐⭐⭐⭐"
-    elif score >= 0.5:
+    elif score >= 0.4:
         return "⭐⭐⭐⭐"
     elif score >= 0.3:
         return "⭐⭐⭐"
@@ -139,6 +139,7 @@ with open("similarity_nickName_top5.json", "r", encoding="utf-8") as f:
 # 메인 앱 부분
 st.title("네트워크 인사이트")
 st.write("카카오톡 대화를 통한 스마트 인맥 분석기")
+st.write("현재는 랭체인 단톡방만 이용할 수 있습니다.")
 
 # API Key 체크
 if not api_key:
@@ -328,7 +329,9 @@ if uploaded_file is not None:
                 st.line_chart(timeline_data.set_index("날짜"))
 
                 # Markdown 생성
-                markdown_result = generate_markdown(nickname, result, wordcloud_path)
+                markdown_result = generate_markdown(
+                    nickname, result, matching_nicknames
+                )
 
                 # Markdown 파일 다운로드 버튼
                 st.markdown("## 분석 결과 다운로드")
