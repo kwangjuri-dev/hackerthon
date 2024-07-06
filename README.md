@@ -35,11 +35,11 @@
 
 ![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/5a8deca7-6d86-4dba-9dac-1eac516b9da6)
 
-**최종 구현 ;UI (네트워크 아이콘 클릭 전)**
+**최종 구현 UI (네트워크 아이콘 클릭 전)**
 
 ![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/8f774377-47b2-44ad-80d5-1cddcecaaf40)
 
-**최 구현  UI (아이콘 클릭 후 프로필 팝업)**
+**최종 구현  UI (아이콘 클릭 후 프로필 팝업)**
 
 ![image](https://github.com/kwangjuri-dev/hackerthon/assets/155471168/80c1dae3-9abd-44d6-b7ce-2ea973329094)
 
