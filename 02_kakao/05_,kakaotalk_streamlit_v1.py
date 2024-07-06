@@ -1,3 +1,5 @@
+#  사람 간의 유사도 검색이 적용되지 않은 버전임. 
+
 import streamlit as st
 from kakaotalk_loader import KakaotalkLoader
 from langchain_core.prompts import ChatPromptTemplate
@@ -14,7 +16,7 @@ from langchain_core.documents import Document
 import base64
 from datetime import datetime
 
-# Sidebar 추가
+# Sidebar 추가 
 st.sidebar.title("네트워크 인사이트 정보")
 st.sidebar.markdown(
     """
