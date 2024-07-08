@@ -1,5 +1,5 @@
 # 사람 간의 유사도 방식이 사전에 계산된 파일을 사용하는 것임.
-# streamlit share에 배포가 된 파일 버전임. 
+# streamlit share에 배포가 된 파일 버전임.
 
 import streamlit as st
 from kakaotalk_loader import KakaotalkLoader
@@ -185,7 +185,7 @@ if uploaded_file is not None:
                 그리고, 대화를 분석하여 성향을 3개의 블릿 리스트 스타일로 정리해 주세요.
                 Answer 형식:
                 [대화 개수] : {message_count}
-                [대화 요약] : 전체적인 대화 요약을 200자 정도로 정리.
+                [대화 요약] : 전체적인 대화 요약을 150자 정도로 정리.
                 [성격 분석] :
                 • (첫 번째 성격 특성) 50자 정도로 정리
                 • (두 번째 성격 특성) 50자 정도로 정리
